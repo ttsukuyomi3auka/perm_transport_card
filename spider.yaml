@@ -33,3 +33,7 @@ groups:
   - path: assets/images
     class_name: Images
     types: [ .png, .jpg, .jpeg, .webp, .webm, .bmp ]
+
+  - path: assets/icons
+    class_name: LocalIcons
+    types: [ .png, .jpg, .jpeg, .webp, .webm, .bmp, .svg]
