@@ -1,26 +1,23 @@
 import 'dart:math';
 
-import 'package:perm_transport_card/constants.dart';
 import 'package:perm_transport_card/fake_data_class.dart';
 import 'package:perm_transport_card/models/card.dart';
 import 'package:perm_transport_card/models/response/fake_api_response.dart';
 
 class FakeApiService {
-  Future<FakeApiResponse<Card>> getData<T>(String id) async {
+  Future<FakeApiResponse<List<PermCard>>> getData<T>(String id) async {
     await _randowDelay();
     // var exception = randomException();
     // if (exception != null) {
     //   return FakeApiResponse.failed(exception);
     // }
-    Card card = FakeData.cards.firstWhere(
-      (card) => card.id == id,
-      orElse: () => unknown,
-    );
-    if (card == unknown) {
+    bool containsCard = FakeData.cards.any((card) => card.id == id);
+
+    if (containsCard) {
+      return FakeApiResponse.success(FakeData.cards);
+    } else {
       return FakeApiResponse.failed(
           "Карта с номером [$id] не найдена в системе");
-    } else {
-      return FakeApiResponse.success(card);
     }
   }
 

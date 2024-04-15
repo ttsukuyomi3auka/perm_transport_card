@@ -1,4 +1,4 @@
-class Card {
+class PermCard {
   String id;
   String status;
   String type;
@@ -8,6 +8,13 @@ class Card {
   DateTime benefitValidityPeriod;
   String image;
 
-  Card(this.id, this.status, this.type, this.region, this.cardValidityPeriod,
-      this.benefit, this.benefitValidityPeriod, this.image);
+  PermCard(
+      this.id,
+      this.status,
+      this.type,
+      this.region,
+      this.cardValidityPeriod,
+      this.benefit,
+      this.benefitValidityPeriod,
+      this.image);
 }

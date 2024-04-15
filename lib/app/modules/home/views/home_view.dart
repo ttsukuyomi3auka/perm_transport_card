@@ -1,107 +1,153 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:perm_transport_card/app/modules/home/controllers/home_controller.dart';
 import 'package:perm_transport_card/app/modules/home/widgets/card_added_screen.dart';
 import 'package:perm_transport_card/app/modules/home/widgets/no_card_screen.dart';
+import 'package:perm_transport_card/constants.dart';
+import 'package:perm_transport_card/models/card.dart';
 import 'package:perm_transport_card/resources/resources.dart';
-import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
-  const HomeView({Key? key});
+  const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(Images.background),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-              color: const Color.fromARGB(255, 18, 18, 18),
-              padding: const EdgeInsets.symmetric(vertical: 5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  buildTab(LocalIcons.ticket, "Билеты", 0),
-                  buildTab(LocalIcons.text, "Проездной", 1),
-                  buildTab(LocalIcons.busWithRoadSign, "Расписание", 2),
-                  buildTab(LocalIcons.user, "Кабинет", 3),
-                ],
-              ),
-            ),
-          ),
-          ListView( 
-            scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
-            children: const [
-              Image(
-                height: 175,
-                width: 350,
-                image: AssetImage(Images.defaultCard),
-              ),
-              SizedBox(width: 10),
-              Image(
-                height: 175,
-                width: 350,
-                image: AssetImage(Images.defaultCardGreyAdd),
-              ),
-            ],
-          ),
-          Obx(
-            () => IndexedStack(
-              index: controller.hasCard.value,
-              children: const [
-                CardAddedScreen(),
-                NoCardScreen(),
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Obx(() => Text(
+                      controller.currentCard.value.id == defaultId
+                          ? "Добавить карту"
+                          : controller.currentCard.value.id,
+                      style: const TextStyle(fontSize: 16, color: Colors.white),
+                    )),
+                const SizedBox(width: 4),
+                InkWell(
+                  onTap: () {},
+                  child: const Icon(
+                    Icons.copy,
+                    size: 16,
+                    color: Colors.blue,
+                  ),
+                ),
               ],
             ),
+            const SizedBox(height: 4),
+            const Text(
+              "Транспортная карта",
+              style: TextStyle(fontSize: 14, color: Colors.white),
+              textAlign: TextAlign.left,
+            ),
+          ],
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.more_vert, size: 40, color: Colors.white),
           ),
         ],
       ),
-    );
-  }
-
-  InkWell buildTab(String icon, String label, int tabIndex) {
-    return InkWell(
-      onTap: () {
-        controller.setCurrentTab(tabIndex);
-      },
-      child: SizedBox(
-        width: Get.width / 4,
-        child: Obx(
-          () => Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgPicture.asset(
-                icon,
-                width: 32,
-                height: 32,
-                color: controller.currentTab.value == tabIndex
-                    ? const Color.fromARGB(255, 69, 117, 210)
-                    : const Color.fromARGB(255, 90, 90, 90),
-              ),
-              Text(
-                label,
-                style: TextStyle(
-                  color: controller.currentTab.value == tabIndex
-                      ? const Color.fromARGB(255, 69, 117, 210)
-                      : const Color.fromARGB(255, 90, 90, 90),
+      backgroundColor: Colors.black,
+      bottomNavigationBar: Obx(() => BottomNavigationBar(
+            currentIndex: controller.currentTab.value,
+            backgroundColor: Colors.red,
+            unselectedLabelStyle:
+                const TextStyle(color: Color.fromARGB(255, 90, 90, 90)),
+            selectedItemColor: const Color.fromARGB(255, 69, 117, 210),
+            onTap: controller.setCurrentTab,
+            items: [
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  LocalIcons.ticket,
+                  width: 15,
+                  height: 15,
                 ),
+                label: "Билеты",
               ),
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  LocalIcons.text,
+                  width: 20,
+                  height: 20,
+                ),
+                label: "Проездной",
+              ),
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  LocalIcons.busWithRoadSign,
+                  width: 30,
+                  height: 30,
+                ),
+                label: "Расписание",
+              ),
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  LocalIcons.user,
+                  width: 30,
+                  height: 30,
+                ),
+                label: "Кабинет",
+              )
             ],
+          )),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(Images.background),
+            fit: BoxFit.cover,
           ),
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: Obx(() {
+                return controller.cards.when(
+                  success: (List<PermCard> cards) {
+                    return PageView.builder(
+                      itemCount: cards.length,
+                      controller: controller.pageController,
+                      onPageChanged: (index) {
+                        controller.updateCurrentCard(cards[index]);
+                      },
+                      itemBuilder: (context, index) {
+                        return ListenableBuilder(
+                            listenable: controller.pageController,
+                            builder: (context, child) {
+                              double factor = 1;
+                              if (controller.pageController.position
+                                  .hasContentDimensions) {
+                                factor = 1 -
+                                    (controller.pageController.page! - index)
+                                        .abs();
+                              }
+                              if (cards[index].id == defaultId) {
+                                return NoCardScreen(cards[index]);
+                              } else {
+                                return CardAddedScreen(cards[index]);
+                              }
+                            });
+                      },
+                    );
+                  },
+                  loading: () => const Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.red,
+                    ),
+                  ),
+                  failed: (message) {
+                    Get.snackbar("Ошибка", message);
+                    return Container();
+                  },
+                );
+              }),
+            ),
+          ],
         ),
       ),
     );

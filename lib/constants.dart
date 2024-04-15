@@ -1,3 +1,6 @@
 import 'package:perm_transport_card/models/card.dart';
 
-Card unknown = Card("", "", "", "", DateTime.now(), "", DateTime.now(), "");
+String defaultId = "96431059033";
+
+PermCard unknown = PermCard(
+    "Добавить карту", "", "", "", DateTime.now(), "", DateTime.now(), "");
