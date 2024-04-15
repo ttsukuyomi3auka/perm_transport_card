@@ -6,12 +6,14 @@ import 'package:perm_transport_card/models/card.dart';
 import 'package:perm_transport_card/repositories/fake_card_repository.dart';
 
 class HomeController extends GetxController {
-  PageController pageController = PageController(viewportFraction: 0.8);
+  PageController pageController = PageController(viewportFraction: 0.85);
   final FakeCardRepository _fakeCardRepository;
   final _cards = CardListResponse.loading().obs;
   RxInt currentTab = 1.obs;
   Rx<PermCard> currentCard = unknown.obs;
   TextEditingController idCard = TextEditingController();
+  RxBool hasText = false.obs;
+  RxBool isValid = false.obs;
   String id = defaultId;
 
   HomeController(this._fakeCardRepository);
@@ -22,9 +24,15 @@ class HomeController extends GetxController {
     currentTab.value = tabIndex;
   }
 
+  void updateTextFieldStatus() {
+    hasText.value = idCard.text.isNotEmpty;
+    isValid.value = idCard.text.length == 8;
+  }
+
   @override
   void onInit() async {
     await getCard();
+    idCard.addListener(updateTextFieldStatus);
     super.onInit();
   }
 
@@ -44,5 +52,11 @@ class HomeController extends GetxController {
         loading: () => {},
         failed: (mes) => {});
     id = defaultId;
+  }
+
+  @override
+  void onClose() {
+    idCard.dispose();
+    super.onClose();
   }
 }

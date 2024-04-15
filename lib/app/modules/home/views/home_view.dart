@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:get/get.dart';
 import 'package:perm_transport_card/app/modules/home/controllers/home_controller.dart';
 import 'package:perm_transport_card/app/modules/home/widgets/card_added_screen.dart';
@@ -62,20 +63,22 @@ class HomeView extends GetView<HomeController> {
           ),
         ],
       ),
-      backgroundColor: Colors.black,
       bottomNavigationBar: Obx(() => BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
             currentIndex: controller.currentTab.value,
-            backgroundColor: Colors.red,
-            unselectedLabelStyle:
-                const TextStyle(color: Color.fromARGB(255, 90, 90, 90)),
-            selectedItemColor: const Color.fromARGB(255, 69, 117, 210),
+            backgroundColor: Colors.black,
+            unselectedItemColor: Colors.grey,
+            selectedItemColor: Colors.blue,
             onTap: controller.setCurrentTab,
             items: [
               BottomNavigationBarItem(
                 icon: SvgPicture.asset(
                   LocalIcons.ticket,
-                  width: 15,
-                  height: 15,
+                  width: 20,
+                  height: 20,
+                  color: controller.currentTab.value == 0
+                      ? Colors.blue
+                      : Colors.grey,
                 ),
                 label: "Билеты",
               ),
@@ -84,22 +87,31 @@ class HomeView extends GetView<HomeController> {
                   LocalIcons.text,
                   width: 20,
                   height: 20,
+                  color: controller.currentTab.value == 1
+                      ? Colors.blue
+                      : Colors.grey,
                 ),
                 label: "Проездной",
               ),
               BottomNavigationBarItem(
                 icon: SvgPicture.asset(
                   LocalIcons.busWithRoadSign,
-                  width: 30,
-                  height: 30,
+                  width: 20,
+                  height: 20,
+                  color: controller.currentTab.value == 2
+                      ? Colors.blue
+                      : Colors.grey,
                 ),
                 label: "Расписание",
               ),
               BottomNavigationBarItem(
                 icon: SvgPicture.asset(
                   LocalIcons.user,
-                  width: 30,
-                  height: 30,
+                  width: 20,
+                  height: 20,
+                  color: controller.currentTab.value == 3
+                      ? Colors.blue
+                      : Colors.grey,
                 ),
                 label: "Кабинет",
               )
@@ -136,13 +148,25 @@ class HomeView extends GetView<HomeController> {
                                         .abs();
                               }
                               if (cards[index].id == defaultId) {
-                                return NoCardScreen(cards[index]);
+                                return NoCardScreen(cards[index], controller);
                               } else {
                                 return CardAddedScreen(cards[index]);
                               }
                             });
                       },
                     );
+                    // return Swiper(
+                    //   viewportFraction: 0.9,
+                    //   itemCount: cards.length,
+                    //   itemBuilder: (context, index) {
+                    //     if (cards[index].id == defaultId) {
+                    //       return NoCardScreen(cards[index]);
+                    //     } else {
+                    //       return CardAddedScreen(cards[index]);
+                    //     }
+                    //   },
+                    //   pagination: const SwiperPagination(),
+                    // );
                   },
                   loading: () => const Center(
                     child: CircularProgressIndicator(
