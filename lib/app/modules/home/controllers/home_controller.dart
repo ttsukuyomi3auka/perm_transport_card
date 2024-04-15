@@ -11,7 +11,6 @@ class HomeController extends GetxController {
   final _cards = CardListResponse.loading().obs;
   RxInt currentTab = 1.obs;
   Rx<PermCard> currentCard = unknown.obs;
-  RxInt hasCard = 1.obs;
   TextEditingController idCard = TextEditingController();
   String id = defaultId;
 

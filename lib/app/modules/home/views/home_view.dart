@@ -19,30 +19,39 @@ class HomeView extends GetView<HomeController> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Obx(() => Text(
+            Obx(() => Row(
+                  children: [
+                    Text(
                       controller.currentCard.value.id == defaultId
                           ? "Добавить карту"
                           : controller.currentCard.value.id,
                       style: const TextStyle(fontSize: 16, color: Colors.white),
-                    )),
-                const SizedBox(width: 4),
-                InkWell(
-                  onTap: () {},
-                  child: const Icon(
-                    Icons.copy,
-                    size: 16,
-                    color: Colors.blue,
-                  ),
-                ),
-              ],
-            ),
+                    ),
+                    const SizedBox(width: 4),
+                    if (controller.currentCard.value.id != defaultId)
+                      InkWell(
+                        onTap: () {},
+                        child: const Icon(
+                          Icons.copy,
+                          size: 16,
+                          color: Colors.blue,
+                        ),
+                      ),
+                  ],
+                )),
             const SizedBox(height: 4),
-            const Text(
-              "Транспортная карта",
-              style: TextStyle(fontSize: 14, color: Colors.white),
-              textAlign: TextAlign.left,
+            Obx(
+              () {
+                if (controller.currentCard.value.id != defaultId) {
+                  return const Text(
+                    "Транспортная карта",
+                    style: TextStyle(fontSize: 14, color: Colors.white),
+                    textAlign: TextAlign.left,
+                  );
+                } else {
+                  return const SizedBox.shrink();
+                }
+              },
             ),
           ],
         ),
