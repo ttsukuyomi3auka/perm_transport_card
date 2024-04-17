@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -44,19 +46,17 @@ class HomeView extends GetView<HomeController> {
                   ],
                 )),
             const SizedBox(height: 4),
-            Obx(
-              () {
-                if (controller.currentCard.value.id != defaultId) {
-                  return Text(
-                    controller.currentCard.value.name,
-                    style: const TextStyle(fontSize: 14, color: Colors.white),
-                    textAlign: TextAlign.left,
-                  );
-                } else {
-                  return const SizedBox.shrink();
-                }
-              },
-            ),
+            Obx(() {
+              if (controller.currentCard.value.id != defaultId) {
+                return Obx(() => Text(
+                      controller.currentCard.value.name,
+                      style: const TextStyle(fontSize: 14, color: Colors.white),
+                      textAlign: TextAlign.left,
+                    ));
+              } else {
+                return const SizedBox.shrink();
+              }
+            })
           ],
         ),
         actions: [
@@ -219,8 +219,15 @@ class HomeView extends GetView<HomeController> {
                 ),
               ),
               failed: (message) {
-                Get.snackbar("Ошибка", message);
-                return Container();
+                Get.snackbar("", message,
+                    backgroundColor: CustomColor.grey,
+                    snackPosition: SnackPosition.BOTTOM,
+                    colorText: Colors.white,
+                    margin: const EdgeInsets.only(bottom: 80),
+                    borderRadius: 5,
+                    instantInit: false);
+                controller.getCard();
+                return PageView();
               },
             )),
       ),

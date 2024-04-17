@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:perm_transport_card/app/modules/home/controllers/home_controller.dart';
 import 'package:perm_transport_card/constants.dart';
 import 'package:perm_transport_card/models/card.dart';
@@ -63,38 +64,41 @@ class NoCardScreen extends StatelessWidget {
                     width: 120,
                     height: 45,
                     child: Expanded(
-                      child: TextField(
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 16),
-                        // controller: controller.idCard,
-                        decoration: InputDecoration(
-                          counterText: "",
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: CustomColor.grey, width: 1.0),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: CustomColor.grey, width: 3.0),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
-                        maxLength: 8,
-                        maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                        keyboardType: TextInputType.number,
-                        // onChanged: (value) {
-                        //   if (value.length == 8) {
-                        //     controller.idCard.text = value.substring(0, 8);
-                        //     controller.idCard.selection =
-                        //         TextSelection.fromPosition(
-                        //             const TextPosition(offset: 8));
-                        //     controller.isValid.value = true;
-                        //   } else {
-                        //     controller.isValid.value = false;
-                        //   }
-                        // },
-                      ),
+                      child: Obx(() => TextField(
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 16),
+                            controller: controller.idCard,
+                            onChanged: (value) {
+                              var borderColor = CustomColor.grey;
+                              if (value.isNotEmpty) {
+                                borderColor = Colors.red;
+                                if (value.length == 8) {
+                                  borderColor = CustomColor.green;
+                                  FocusScope.of(context).unfocus();
+                                }
+                              }
+                              final inputDecoration = InputDecoration(
+                                counterText: "",
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: borderColor, width: 1.0),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: borderColor, width: 3.0),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              );
+
+                              controller
+                                  .updateTextFieldDecoration(inputDecoration);
+                            },
+                            decoration: controller.textFieldDecoration.value,
+                            maxLength: 8,
+                            maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                            keyboardType: TextInputType.number,
+                          )),
                     ),
                   ),
                 ],
@@ -125,21 +129,28 @@ class NoCardScreen extends StatelessWidget {
               ),
               padding: const EdgeInsets.all(10),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  LocalIcons.add,
-                  width: 20,
-                  height: 20,
-                  color: Colors.white,
-                ),
-                const SizedBox(width: 5),
-                const Text(
-                  "Добавить",
-                  style: TextStyle(color: Colors.white, fontSize: 14),
-                ),
-              ],
+            child: InkWell(
+              onTap: () {
+                controller.getCard();
+                controller.isValid.value = false;
+                controller.idCard.text = "";
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(
+                    LocalIcons.add,
+                    width: 20,
+                    height: 20,
+                    color: Colors.white,
+                  ),
+                  const SizedBox(width: 5),
+                  const Text(
+                    "Добавить",
+                    style: TextStyle(color: Colors.white, fontSize: 14),
+                  ),
+                ],
+              ),
             ),
           ),
         )

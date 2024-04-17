@@ -11,8 +11,6 @@ class RenameCard extends StatelessWidget {
   RenameCard(this.controller, this.card, {super.key})
       : textEditingController =
             TextEditingController(text: controller.currentCard.value.name);
-
-  //TODO должно подниматься содержимое при воде с клавиатуры
   @override
   Widget build(BuildContext context) {
     return Container(

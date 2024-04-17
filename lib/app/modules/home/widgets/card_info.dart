@@ -15,17 +15,17 @@ class CardInfo extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: CustomColor.blackUpDown,
         iconTheme: const IconThemeData(color: Colors.grey),
-        title: const Column(
+        title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Траспортная карта",
+              card.name,
               style: TextStyle(color: Colors.white, fontSize: 16),
             ),
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
-            Text(
+            const Text(
               "Информация о карте",
               style: TextStyle(color: Colors.white, fontSize: 12),
             ),

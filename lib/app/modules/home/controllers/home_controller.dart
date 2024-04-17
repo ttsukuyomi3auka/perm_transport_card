@@ -15,6 +15,17 @@ class HomeController extends GetxController {
   RxBool hasText = false.obs;
   RxBool isValid = false.obs;
   String id = defaultId;
+  Rx<InputDecoration> textFieldDecoration = Rx<InputDecoration>(InputDecoration(
+    counterText: "",
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColor.grey, width: 1.0),
+      borderRadius: BorderRadius.circular(5),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColor.grey, width: 3.0),
+      borderRadius: BorderRadius.circular(5),
+    ),
+  ));
 
   HomeController(this._fakeCardRepository);
 
@@ -24,16 +35,14 @@ class HomeController extends GetxController {
     currentTab.value = tabIndex;
   }
 
-  void updateTextFieldStatus() {
-    hasText.value = idCard.text.isNotEmpty;
-    isValid.value = idCard.text.length == 8;
-  }
-
   @override
   void onInit() async {
     await getCard();
-    idCard.addListener(updateTextFieldStatus);
     super.onInit();
+  }
+
+  void updateTextFieldDecoration(InputDecoration newDecoration) {
+    textFieldDecoration.value = newDecoration;
   }
 
   void updateCurrentCard(PermCard card) {

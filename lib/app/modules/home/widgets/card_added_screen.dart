@@ -99,30 +99,37 @@ class CardAddedScreen extends StatelessWidget {
                 endIndent: 5,
               ),
               //TODO поменять выравнивание текста 
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    "Проездной на один месяц",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "до ",
-                        style: TextStyle(
-                            color: CustomColor.greyIcon, fontSize: 12),
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Проездной на 1 месяц",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    const SizedBox(height: 4),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            "до ",
+                            style: TextStyle(
+                                color: CustomColor.greyIcon, fontSize: 12),
+                          ),
+                          Text(
+                            convertedDateTime,
+                            style: TextStyle(
+                                color: CustomColor.greyIcon, fontSize: 12),
+                          ),
+                        ],
                       ),
-                      Text(
-                        convertedDateTime,
-                        style: TextStyle(
-                            color: CustomColor.greyIcon, fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
