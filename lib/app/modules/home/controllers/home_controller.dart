@@ -47,7 +47,7 @@ class HomeController extends GetxController {
     print("Я выполнил запрос и получил это: ${_cards.value}");
     _cards.value.when(
         success: (data) {
-          currentCard.value = data[0];
+          updateCurrentCard(data[0]);
         },
         loading: () => {},
         failed: (mes) => {});

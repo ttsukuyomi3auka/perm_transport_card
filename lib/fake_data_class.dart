@@ -18,10 +18,11 @@ List<PermCard> data = [
       "Пермь",
       DateTime.now().add(const Duration(days: 365 * 4)),
       "Нет льготы",
-      DateTime.utc(0, 0, 0),
-      Images.defaultCard),
+      DateTime.utc(1970),
+      Images.defaultCard,
+      "Транспортная карта"),
   PermCard("96431059033", "", "", "", DateTime.now(), "", DateTime.now(),
-      Images.defaultCardGreyAdd)
+      Images.defaultCardGreyAdd, "Транспортная карта")
 ];
 
 abstract class FakeData {

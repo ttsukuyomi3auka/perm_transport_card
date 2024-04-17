@@ -1,9 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:perm_transport_card/app/modules/home/controllers/home_controller.dart';
 import 'package:perm_transport_card/constants.dart';
 import 'package:perm_transport_card/models/card.dart';
@@ -31,7 +28,7 @@ class NoCardScreen extends StatelessWidget {
         const SizedBox(height: 20),
         Container(
           width: 250,
-          height: 160,
+          height: 120,
           decoration: BoxDecoration(
             color: Colors.grey,
             borderRadius: BorderRadius.circular(5),
@@ -67,24 +64,36 @@ class NoCardScreen extends StatelessWidget {
                     child: Expanded(
                       child: TextField(
                         controller: controller.idCard,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           counterText: "",
                           enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.greenAccent, width: 5.0),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 0, 0, 0), width: 1.0),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.blue, width: 3.0),
+                            borderSide: const BorderSide(
+                                color: Colors.blue, width: 3.0),
+                            borderRadius: BorderRadius.circular(5),
                           ),
                         ),
-
-                        // onChanged: (_) {
-                        //   controller.updateTextFieldStatus();
-                        // },
                         maxLength: 8,
                         maxLengthEnforcement: MaxLengthEnforcement.enforced,
                         keyboardType: TextInputType.number,
+                        onChanged: (value) {
+                          if (value.length == 8) {
+                            controller.idCard.text = value.substring(
+                                0, 8); // Обрезаем ввод после 8 символов
+                            controller.idCard.selection =
+                                TextSelection.fromPosition(const TextPosition(
+                                    offset: 8)); // Перемещаем курсор в конец
+                            // Делаем обводку зеленой, когда достигнута максимальная длина
+                            controller.isValid.value = true;
+                          } else {
+                            // Делаем обводку красной, если введено меньше 8 символов
+                            controller.isValid.value = false;
+                          }
+                        },
                       ),
                     ),
                   ),
@@ -136,5 +145,13 @@ class NoCardScreen extends StatelessWidget {
         )
       ],
     );
+  }
+
+  Color _getBorderColor() {
+    if (controller.isValid.value) {
+      return Colors.greenAccent;
+    } else {
+      return Colors.red;
+    }
   }
 }

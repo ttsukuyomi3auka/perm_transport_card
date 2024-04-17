@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/svg.dart';
@@ -7,13 +9,13 @@ import 'package:perm_transport_card/resources/resources.dart';
 class CardAddedScreen extends StatelessWidget {
   final PermCard card;
 
-  const CardAddedScreen(this.card, {Key? key}) : super(key: key);
+  const CardAddedScreen(this.card, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    DateTime futureDate = DateTime.now().add(const Duration(days: 30));
-    DateTime futureDateWithZeroTime = DateTime(
-        futureDate.year, futureDate.month, futureDate.day, futureDate.hour);
+    DateTime now = DateTime.now().add(const Duration(days: 30));
+    String convertedDateTime =
+        "${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')} ${"00"}-${"00"}";
     return Column(
       children: [
         const SizedBox(height: 10),
@@ -27,39 +29,51 @@ class CardAddedScreen extends StatelessWidget {
         ),
         Container(
           width: 250,
-          height: 40,
+          height: 45,
           decoration: BoxDecoration(
             color: Colors.grey,
             borderRadius: BorderRadius.circular(5),
           ),
-          child: const Row(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 "Баланс:",
                 style: TextStyle(color: Colors.white),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 5,
               ),
-              Text(
-                "0 руб",
-                style: TextStyle(color: Colors.black),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.lightBlue,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: const Text(
+                  "0 руб",
+                  style: TextStyle(
+                    color: Colors.black,
+                    // backgroundColor: Colors.lightBlue,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               )
             ],
           ),
         ),
         const SizedBox(
-          height: 5,
+          height: 8,
         ),
         Container(
           width: 250,
-          height: 80,
+          height: 90,
           decoration: BoxDecoration(
             color: Colors.grey,
             borderRadius: BorderRadius.circular(5),
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(
                 height: 8,
@@ -84,16 +98,35 @@ class CardAddedScreen extends StatelessWidget {
                 indent: 5,
                 endIndent: 5,
               ),
-              const Text(
-                "Проездной на 1 месяц",
-                style: TextStyle(color: Colors.white),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Проездной на один месяц",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "до ",
+                        style: TextStyle(color: Colors.black, fontSize: 12),
+                      ),
+                      Text(
+                        convertedDateTime,
+                        style:
+                            const TextStyle(color: Colors.black, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              Text("До ${futureDateWithZeroTime.year}") //TODO выводить дату адекватно возможно хранить в модели
             ],
           ),
         ),
         const SizedBox(
-          height: 5,
+          height: 8,
         ),
         SizedBox(
           width: 250,
@@ -126,7 +159,7 @@ class CardAddedScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(
-          height: 5,
+          height: 8,
         ),
         SizedBox(
           width: 250,
@@ -159,7 +192,7 @@ class CardAddedScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(
-          height: 5,
+          height: 8,
         ),
         SizedBox(
           width: 250,

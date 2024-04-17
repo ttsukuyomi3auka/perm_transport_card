@@ -39,8 +39,8 @@ dependencies:
   flutter_svg: ^2.0.10+1
   freezed_annotation: ^2.4.1
   json_annotation: ^4.8.1
-  dependencies:
   flutter_swiper_view: ^1.1.8
+
 
 dev_dependencies:
   flutter_test:

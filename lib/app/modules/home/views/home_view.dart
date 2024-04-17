@@ -4,7 +4,10 @@ import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:get/get.dart';
 import 'package:perm_transport_card/app/modules/home/controllers/home_controller.dart';
 import 'package:perm_transport_card/app/modules/home/widgets/card_added_screen.dart';
+import 'package:perm_transport_card/app/modules/home/widgets/card_info.dart';
+import 'package:perm_transport_card/app/modules/home/widgets/delete_card.dart';
 import 'package:perm_transport_card/app/modules/home/widgets/no_card_screen.dart';
+import 'package:perm_transport_card/app/modules/home/widgets/rename_card.dart';
 import 'package:perm_transport_card/constants.dart';
 import 'package:perm_transport_card/models/card.dart';
 import 'package:perm_transport_card/resources/resources.dart';
@@ -15,6 +18,7 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Column(
@@ -44,9 +48,9 @@ class HomeView extends GetView<HomeController> {
             Obx(
               () {
                 if (controller.currentCard.value.id != defaultId) {
-                  return const Text(
-                    "Транспортная карта",
-                    style: TextStyle(fontSize: 14, color: Colors.white),
+                  return Text(
+                    controller.currentCard.value.name,
+                    style: const TextStyle(fontSize: 14, color: Colors.white),
                     textAlign: TextAlign.left,
                   );
                 } else {
@@ -57,10 +61,73 @@ class HomeView extends GetView<HomeController> {
           ],
         ),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.more_vert, size: 40, color: Colors.white),
-          ),
+          Obx(() => PopupMenuButton(
+                enabled: controller.currentCard.value.id != defaultId,
+                color: Colors.grey,
+                icon:
+                    const Icon(Icons.more_vert, size: 40, color: Colors.white),
+                itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                  PopupMenuItem(
+                    child: ListTile(
+                      title: const Text(
+                        "Информация о карте",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onTap: () {
+                        Get.to(const CardInfo(),
+                            arguments: controller.currentCard.value);
+                      },
+                    ),
+                  ),
+                  PopupMenuItem(
+                    child: ListTile(
+                      title: const Text(
+                        "Обновить",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onTap: () {
+                        controller.getCard();
+                      },
+                    ),
+                  ),
+                  PopupMenuItem(
+                    child: ListTile(
+                      title: const Text(
+                        "Переименовать карту",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onTap: () {
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (BuildContext context) {
+                            return RenameCard(
+                                controller, controller.currentCard.value);
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  PopupMenuItem(
+                    child: ListTile(
+                      title: const Text(
+                        "Удалить карту",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onTap: () {
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (BuildContext context) {
+                            return DeleteCard(
+                                controller, controller.currentCard.value);
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              )),
         ],
       ),
       bottomNavigationBar: Obx(() => BottomNavigationBar(
@@ -124,64 +191,40 @@ class HomeView extends GetView<HomeController> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Column(
-          children: [
-            Expanded(
-              child: Obx(() {
-                return controller.cards.when(
-                  success: (List<PermCard> cards) {
-                    return PageView.builder(
-                      itemCount: cards.length,
-                      controller: controller.pageController,
-                      onPageChanged: (index) {
-                        controller.updateCurrentCard(cards[index]);
-                      },
-                      itemBuilder: (context, index) {
-                        return ListenableBuilder(
-                            listenable: controller.pageController,
-                            builder: (context, child) {
-                              double factor = 1;
-                              if (controller.pageController.position
-                                  .hasContentDimensions) {
-                                factor = 1 -
-                                    (controller.pageController.page! - index)
-                                        .abs();
-                              }
-                              if (cards[index].id == defaultId) {
-                                return NoCardScreen(cards[index], controller);
-                              } else {
-                                return CardAddedScreen(cards[index]);
-                              }
-                            });
-                      },
-                    );
-                    // return Swiper(
-                    //   viewportFraction: 0.9,
-                    //   itemCount: cards.length,
-                    //   itemBuilder: (context, index) {
-                    //     if (cards[index].id == defaultId) {
-                    //       return NoCardScreen(cards[index]);
-                    //     } else {
-                    //       return CardAddedScreen(cards[index]);
-                    //     }
-                    //   },
-                    //   pagination: const SwiperPagination(),
-                    // );
+        child: Obx(() => controller.cards.when(
+              success: (List<PermCard> cards) {
+                return PageView.builder(
+                  itemCount: cards.length,
+                  controller: controller.pageController,
+                  onPageChanged: (index) {
+                    controller.updateCurrentCard(cards[index]);
                   },
-                  loading: () => const Center(
-                    child: CircularProgressIndicator(
-                      color: Colors.red,
-                    ),
-                  ),
-                  failed: (message) {
-                    Get.snackbar("Ошибка", message);
-                    return Container();
+                  itemBuilder: (context, index) {
+                    double factor = 1;
+                    if (controller
+                        .pageController.position.hasContentDimensions) {
+                      factor =
+                          1 - (controller.pageController.page! - index).abs();
+                    }
+                    final card = cards[index];
+                    if (card.id == defaultId) {
+                      return NoCardScreen(card, controller);
+                    } else {
+                      return CardAddedScreen(card);
+                    }
                   },
                 );
-              }),
-            ),
-          ],
-        ),
+              },
+              loading: () => const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.red,
+                ),
+              ),
+              failed: (message) {
+                Get.snackbar("Ошибка", message);
+                return Container();
+              },
+            )),
       ),
     );
   }
