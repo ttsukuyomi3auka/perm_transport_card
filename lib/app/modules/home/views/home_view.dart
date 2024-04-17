@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -202,6 +200,7 @@ class HomeView extends GetView<HomeController> {
                   controller: controller.pageController,
                   onPageChanged: (index) {
                     controller.updateCurrentCard(cards[index]);
+                    controller.setDefaultParametrs();
                   },
                   itemBuilder: (context, index) {
                     final card = cards[index];

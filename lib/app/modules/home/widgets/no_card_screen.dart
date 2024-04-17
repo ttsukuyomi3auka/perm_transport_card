@@ -14,8 +14,6 @@ class NoCardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO Динамическое измениние цвета borderSide
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -68,6 +66,9 @@ class NoCardScreen extends StatelessWidget {
                             style: const TextStyle(
                                 color: Colors.white, fontSize: 16),
                             controller: controller.idCard,
+                            onTapOutside: (PointerDownEvent event) {
+                              FocusManager.instance.primaryFocus?.unfocus();
+                            },
                             onChanged: (value) {
                               var borderColor = CustomColor.grey;
                               if (value.isNotEmpty) {

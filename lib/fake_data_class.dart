@@ -24,7 +24,12 @@ List<PermCard> data = [
   PermCard("96431059033", "", "", "", DateTime.now(), "", DateTime.now(),
       Images.defaultCardGreyAdd, "Транспортная карта")
 ];
+List<PermCard> deletedData = [
+  PermCard("96431059033", "", "", "", DateTime.now(), "", DateTime.now(),
+      Images.defaultCardGreyAdd, "Транспортная карта")
+];
 
 abstract class FakeData {
   static List<PermCard> cards = data;
+  static List<PermCard> empty = deletedData;
 }

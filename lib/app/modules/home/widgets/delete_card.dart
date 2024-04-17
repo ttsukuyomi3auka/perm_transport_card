@@ -87,7 +87,9 @@ class DeleteCard extends StatelessWidget {
             width: MediaQuery.of(context).size.width - 30,
             height: 40,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                controller.deleteCard();
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: CustomColor.blue,
                 shape: RoundedRectangleBorder(

@@ -20,7 +20,7 @@ class RenameCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           AppBar(
-            backgroundColor: Colors.transparent,
+            backgroundColor: CustomColor.blackUpDown,
             elevation: 0,
             title: Center(
               child: Text(
@@ -105,7 +105,8 @@ class RenameCard extends StatelessWidget {
             height: 40,
             child: ElevatedButton(
               onPressed: () {
-                controller.currentCard.value.name = textEditingController.text;
+                card.name = textEditingController.text;
+                controller.updateCurrentCard(card);
                 print(controller.currentCard.value.name);
                 //TODO тут бы как-то сигнал сделать что я сменил ник
                 print('New name: $textEditingController');

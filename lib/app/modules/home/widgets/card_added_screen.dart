@@ -98,7 +98,6 @@ class CardAddedScreen extends StatelessWidget {
                 indent: 5,
                 endIndent: 5,
               ),
-              //TODO поменять выравнивание текста 
               Padding(
                 padding: const EdgeInsets.only(left: 10),
                 child: Column(

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:perm_transport_card/constants.dart';
+import 'package:perm_transport_card/fake_data_class.dart';
 import 'package:perm_transport_card/models/card.dart';
 import 'package:perm_transport_card/repositories/fake_card_repository.dart';
 
@@ -35,6 +36,11 @@ class HomeController extends GetxController {
     textFieldDecoration.value = newDecoration;
   }
 
+  void deleteCard() {
+    _cards.value = CardListResponse.success(FakeData.empty);
+    setDefaultParametrs();
+  }
+
   void setDefaultParametrs() {
     id = defaultId;
     idCard.text = '';
@@ -55,6 +61,7 @@ class HomeController extends GetxController {
 
   void updateCurrentCard(PermCard card) {
     currentCard.value = card;
+    print("v update");
   }
 
   Future<void> getCard() async {
