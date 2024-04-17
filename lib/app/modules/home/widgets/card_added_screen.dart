@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/svg.dart';
+import 'package:perm_transport_card/constants.dart';
 import 'package:perm_transport_card/models/card.dart';
 import 'package:perm_transport_card/resources/resources.dart';
 
@@ -31,7 +32,7 @@ class CardAddedScreen extends StatelessWidget {
           width: 250,
           height: 45,
           decoration: BoxDecoration(
-            color: Colors.grey,
+            color: CustomColor.black,
             borderRadius: BorderRadius.circular(5),
           ),
           child: Row(
@@ -46,14 +47,13 @@ class CardAddedScreen extends StatelessWidget {
               ),
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.lightBlue,
+                  color: CustomColor.blueLight,
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: const Text(
                   "0 руб",
                   style: TextStyle(
                     color: Colors.black,
-                    // backgroundColor: Colors.lightBlue,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
@@ -69,7 +69,7 @@ class CardAddedScreen extends StatelessWidget {
           width: 250,
           height: 90,
           decoration: BoxDecoration(
-            color: Colors.grey,
+            color: CustomColor.black,
             borderRadius: BorderRadius.circular(5),
           ),
           child: Column(
@@ -93,11 +93,12 @@ class CardAddedScreen extends StatelessWidget {
               ),
               const Divider(
                 color: Colors.white,
-                thickness: 1.0,
+                thickness: 0.4,
                 height: 6,
                 indent: 5,
                 endIndent: 5,
               ),
+              //TODO поменять выравнивание текста 
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -105,18 +106,19 @@ class CardAddedScreen extends StatelessWidget {
                     "Проездной на один месяц",
                     style: TextStyle(color: Colors.white),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
+                      Text(
                         "до ",
-                        style: TextStyle(color: Colors.black, fontSize: 12),
+                        style: TextStyle(
+                            color: CustomColor.greyIcon, fontSize: 12),
                       ),
                       Text(
                         convertedDateTime,
-                        style:
-                            const TextStyle(color: Colors.black, fontSize: 12),
+                        style: TextStyle(
+                            color: CustomColor.greyIcon, fontSize: 12),
                       ),
                     ],
                   ),
@@ -134,7 +136,7 @@ class CardAddedScreen extends StatelessWidget {
           child: ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.grey,
+              backgroundColor: CustomColor.grey,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5),
               ),
@@ -167,7 +169,7 @@ class CardAddedScreen extends StatelessWidget {
           child: ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
+              backgroundColor: CustomColor.green,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5),
               ),
@@ -200,7 +202,7 @@ class CardAddedScreen extends StatelessWidget {
           child: ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blueAccent,
+              backgroundColor: CustomColor.blue,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5),
               ),
@@ -211,8 +213,8 @@ class CardAddedScreen extends StatelessWidget {
               children: [
                 SvgPicture.asset(
                   LocalIcons.history,
-                  width: 20,
-                  height: 20,
+                  width: 18,
+                  height: 18,
                   color: Colors.white,
                 ),
                 const SizedBox(width: 5),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:get/get.dart';
 import 'package:perm_transport_card/app/modules/home/controllers/home_controller.dart';
 import 'package:perm_transport_card/app/modules/home/widgets/card_added_screen.dart';
@@ -18,9 +17,9 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: CustomColor.blackUpDown,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -36,10 +35,10 @@ class HomeView extends GetView<HomeController> {
                     if (controller.currentCard.value.id != defaultId)
                       InkWell(
                         onTap: () {},
-                        child: const Icon(
+                        child: Icon(
                           Icons.copy,
                           size: 16,
-                          color: Colors.blue,
+                          color: CustomColor.blueIcon,
                         ),
                       ),
                   ],
@@ -63,15 +62,15 @@ class HomeView extends GetView<HomeController> {
         actions: [
           Obx(() => PopupMenuButton(
                 enabled: controller.currentCard.value.id != defaultId,
-                color: Colors.grey,
-                icon:
-                    const Icon(Icons.more_vert, size: 40, color: Colors.white),
+                color: CustomColor.black,
+                icon: Icon(Icons.more_vert,
+                    size: 40, color: CustomColor.greyIcon),
                 itemBuilder: (BuildContext context) => <PopupMenuEntry>[
                   PopupMenuItem(
                     child: ListTile(
                       title: const Text(
                         "Информация о карте",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white, fontSize: 12),
                       ),
                       onTap: () {
                         Get.to(const CardInfo(),
@@ -83,7 +82,7 @@ class HomeView extends GetView<HomeController> {
                     child: ListTile(
                       title: const Text(
                         "Обновить",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white, fontSize: 12),
                       ),
                       onTap: () {
                         controller.getCard();
@@ -94,15 +93,20 @@ class HomeView extends GetView<HomeController> {
                     child: ListTile(
                       title: const Text(
                         "Переименовать карту",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white, fontSize: 12),
                       ),
                       onTap: () {
                         showModalBottomSheet(
-                          isScrollControlled: true,
                           context: context,
+                          isScrollControlled: true,
                           builder: (BuildContext context) {
-                            return RenameCard(
-                                controller, controller.currentCard.value);
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom),
+                              child: RenameCard(
+                                  controller, controller.currentCard.value),
+                            );
                           },
                         );
                       },
@@ -112,7 +116,7 @@ class HomeView extends GetView<HomeController> {
                     child: ListTile(
                       title: const Text(
                         "Удалить карту",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white, fontSize: 12),
                       ),
                       onTap: () {
                         showModalBottomSheet(
@@ -133,9 +137,9 @@ class HomeView extends GetView<HomeController> {
       bottomNavigationBar: Obx(() => BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             currentIndex: controller.currentTab.value,
-            backgroundColor: Colors.black,
-            unselectedItemColor: Colors.grey,
-            selectedItemColor: Colors.blue,
+            backgroundColor: CustomColor.blackUpDown,
+            unselectedItemColor: CustomColor.grey,
+            selectedItemColor: CustomColor.blueIcon,
             onTap: controller.setCurrentTab,
             items: [
               BottomNavigationBarItem(
@@ -144,8 +148,8 @@ class HomeView extends GetView<HomeController> {
                   width: 20,
                   height: 20,
                   color: controller.currentTab.value == 0
-                      ? Colors.blue
-                      : Colors.grey,
+                      ? CustomColor.blueIcon
+                      : CustomColor.greyIcon,
                 ),
                 label: "Билеты",
               ),
@@ -200,12 +204,6 @@ class HomeView extends GetView<HomeController> {
                     controller.updateCurrentCard(cards[index]);
                   },
                   itemBuilder: (context, index) {
-                    double factor = 1;
-                    if (controller
-                        .pageController.position.hasContentDimensions) {
-                      factor =
-                          1 - (controller.pageController.page! - index).abs();
-                    }
                     final card = cards[index];
                     if (card.id == defaultId) {
                       return NoCardScreen(card, controller);

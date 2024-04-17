@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:perm_transport_card/constants.dart';
 import 'package:perm_transport_card/models/card.dart';
 import 'package:perm_transport_card/resources/resources.dart';
 
@@ -12,7 +13,7 @@ class CardInfo extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: CustomColor.blackUpDown,
         iconTheme: const IconThemeData(color: Colors.grey),
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,7 +48,7 @@ class CardInfo extends StatelessWidget {
               height: 375,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
-                color: Colors.grey,
+                color: CustomColor.black,
               ),
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -58,14 +59,18 @@ class CardInfo extends StatelessWidget {
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
+                  ),
+                  const SizedBox(
+                    height: 4,
                   ),
                   const Divider(
                     color: Colors.white,
                     thickness: 1.0,
                     height: 6,
-                    indent: 5,
-                    endIndent: 5,
+                    indent: 2,
+                    endIndent: 2,
                   ),
                   const SizedBox(height: 10),
                   const Text(

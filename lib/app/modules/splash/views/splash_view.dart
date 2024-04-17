@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:perm_transport_card/constants.dart';
 import 'package:perm_transport_card/resources/resources.dart';
 
 import '../controllers/splash_controller.dart';
@@ -11,7 +12,7 @@ class SplashView extends GetView<SplashController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.grey,
+        color: CustomColor.grey,
         child: const Center(
           child: Image(
               width: 150,
