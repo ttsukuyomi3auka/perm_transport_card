@@ -105,8 +105,8 @@ class RenameCard extends StatelessWidget {
             height: 40,
             child: ElevatedButton(
               onPressed: () {
-                card.name = textEditingController.text;
-                controller.updateCurrentCard(card);
+                controller.currentCard.value.name = textEditingController.text;
+                print(controller.currentCard.value.name);
                 //TODO тут бы как-то сигнал сделать что я сменил ник
                 print('New name: $textEditingController');
               },

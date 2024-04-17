@@ -90,7 +90,7 @@ class NoCardScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                               );
-
+                              controller.buttonColor.value = borderColor;
                               controller
                                   .updateTextFieldDecoration(inputDecoration);
                             },
@@ -104,65 +104,63 @@ class NoCardScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 10),
-              const Text(
-                "Введите последние 8 цифр номера карты.",
-                style: TextStyle(
-                  fontSize: 10,
-                  color: Colors.white,
-                ),
-              ),
+              Obx(() => Text(
+                    "Введите последние 8 цифр номера карты.",
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: controller.buttonColor.value == Colors.red
+                          ? Colors.red
+                          : Colors.white,
+                    ),
+                  )),
             ],
           ),
         ),
         const SizedBox(
           height: 5,
         ),
-        SizedBox(
-          width: 250,
-          height: 40,
-          child: ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: CustomColor.grey,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
-              ),
-              padding: const EdgeInsets.all(10),
-            ),
-            child: InkWell(
-              onTap: () {
-                controller.getCard();
-                controller.isValid.value = false;
-                controller.idCard.text = "";
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    LocalIcons.add,
-                    width: 20,
-                    height: 20,
-                    color: Colors.white,
+        Obx(() => SizedBox(
+              width: 250,
+              height: 40,
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      controller.buttonColor.value == CustomColor.green
+                          ? CustomColor.blue
+                          : CustomColor.grey,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
                   ),
-                  const SizedBox(width: 5),
-                  const Text(
-                    "Добавить",
-                    style: TextStyle(color: Colors.white, fontSize: 14),
+                  padding: const EdgeInsets.all(10),
+                ),
+                child: InkWell(
+                  onTap: () {
+                    if (controller.buttonColor.value == CustomColor.green) {
+                      controller.getCard();
+                      controller.setDefaultParametrs();
+                    }
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        LocalIcons.add,
+                        width: 20,
+                        height: 20,
+                        color: Colors.white,
+                      ),
+                      const SizedBox(width: 5),
+                      const Text(
+                        "Добавить",
+                        style: TextStyle(color: Colors.white, fontSize: 14),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
-        )
+            ))
       ],
     );
-  }
-
-  Color _getBorderColor() {
-    if (controller.isValid.value) {
-      return Colors.greenAccent;
-    } else {
-      return Colors.red;
-    }
   }
 }

@@ -54,7 +54,7 @@ class HomeView extends GetView<HomeController> {
                       textAlign: TextAlign.left,
                     ));
               } else {
-                return const SizedBox.shrink();
+                return const SizedBox();
               }
             })
           ],

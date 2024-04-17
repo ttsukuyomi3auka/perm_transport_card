@@ -12,20 +12,10 @@ class HomeController extends GetxController {
   RxInt currentTab = 1.obs;
   Rx<PermCard> currentCard = unknown.obs;
   TextEditingController idCard = TextEditingController();
-  RxBool hasText = false.obs;
-  RxBool isValid = false.obs;
   String id = defaultId;
-  Rx<InputDecoration> textFieldDecoration = Rx<InputDecoration>(InputDecoration(
-    counterText: "",
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: CustomColor.grey, width: 1.0),
-      borderRadius: BorderRadius.circular(5),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: CustomColor.grey, width: 3.0),
-      borderRadius: BorderRadius.circular(5),
-    ),
-  ));
+  Rx<InputDecoration> textFieldDecoration =
+      Rx<InputDecoration>(const InputDecoration());
+  Rx<Color> buttonColor = Rx<Color>(CustomColor.grey);
 
   HomeController(this._fakeCardRepository);
 
@@ -45,6 +35,24 @@ class HomeController extends GetxController {
     textFieldDecoration.value = newDecoration;
   }
 
+  void setDefaultParametrs() {
+    id = defaultId;
+    idCard.text = '';
+    textFieldDecoration.value = InputDecoration(
+      counterText: "",
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: CustomColor.grey, width: 1.0),
+        borderRadius: BorderRadius.circular(5),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: CustomColor.grey, width: 3.0),
+        borderRadius: BorderRadius.circular(5),
+      ),
+    );
+
+    buttonColor.value = CustomColor.grey;
+  }
+
   void updateCurrentCard(PermCard card) {
     currentCard.value = card;
   }
@@ -60,7 +68,7 @@ class HomeController extends GetxController {
         },
         loading: () => {},
         failed: (mes) => {});
-    id = defaultId;
+    setDefaultParametrs();
   }
 
   @override
