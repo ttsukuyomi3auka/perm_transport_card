@@ -22,7 +22,7 @@ class NoCardScreen extends StatelessWidget {
         Image(
           height: 200,
           width: 400,
-          image: AssetImage(card.image),
+          image: AssetImage(card.type.image),
         ),
         const SizedBox(height: 20),
         Container(
@@ -50,7 +50,7 @@ class NoCardScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    defaultId,
+                    card.id,
                     style: TextStyle(
                       fontSize: 16,
                       color: CustomColor.grey,
@@ -87,7 +87,7 @@ class NoCardScreen extends StatelessWidget {
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: borderColor, width: 3.0),
+                                      color: borderColor, width: 1.0),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                               );

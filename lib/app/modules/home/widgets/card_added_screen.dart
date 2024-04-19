@@ -23,7 +23,7 @@ class CardAddedScreen extends StatelessWidget {
         Image(
           height: 200,
           width: 400,
-          image: AssetImage(card.image),
+          image: AssetImage(card.type.image),
         ),
         const SizedBox(
           height: 10,

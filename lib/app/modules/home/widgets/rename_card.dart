@@ -4,13 +4,11 @@ import 'package:perm_transport_card/app/modules/home/controllers/home_controller
 import 'package:perm_transport_card/constants.dart';
 import 'package:perm_transport_card/models/card.dart';
 
-class RenameCard extends StatelessWidget {
-  final HomeController controller;
+class RenameCard extends GetView<HomeController> {
   final PermCard card;
   final TextEditingController textEditingController;
-  RenameCard(this.controller, this.card, {super.key})
-      : textEditingController =
-            TextEditingController(text: controller.currentCard.value.name);
+  RenameCard(this.card, {super.key})
+      : textEditingController = TextEditingController(text: card.name);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -105,11 +103,10 @@ class RenameCard extends StatelessWidget {
             height: 40,
             child: ElevatedButton(
               onPressed: () {
-                card.name = textEditingController.text;
+                card.copyWith(name: textEditingController.text);
                 controller.updateCurrentCard(card);
-                print(controller.currentCard.value.name);
-                //TODO тут бы как-то сигнал сделать что я сменил ник
-                print('New name: $textEditingController');
+                printInfo(info: card.name);
+                //TODO это не работает и все с этим
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: CustomColor.blue,

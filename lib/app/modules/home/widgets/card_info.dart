@@ -90,7 +90,7 @@ class CardInfo extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                   Text(
-                    card.type,
+                    card.type.text,
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

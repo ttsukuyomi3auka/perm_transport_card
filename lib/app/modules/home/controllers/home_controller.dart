@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:perm_transport_card/constants.dart';
@@ -7,11 +7,12 @@ import 'package:perm_transport_card/models/card.dart';
 import 'package:perm_transport_card/repositories/fake_card_repository.dart';
 
 class HomeController extends GetxController {
-  PageController pageController = PageController(viewportFraction: 0.85);
   final FakeCardRepository _fakeCardRepository;
+  final indexPage = 0.obs;
+  final carouselController = CarouselController();
   final _cards = CardListResponse.loading().obs;
   RxInt currentTab = 1.obs;
-  Rx<PermCard> currentCard = unknown.obs;
+  final Rx<PermCard> currentCard = unknown.obs;
   TextEditingController idCard = TextEditingController();
   String id = defaultId;
   Rx<InputDecoration> textFieldDecoration =
@@ -51,7 +52,7 @@ class HomeController extends GetxController {
         borderRadius: BorderRadius.circular(5),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: CustomColor.grey, width: 3.0),
+        borderSide: BorderSide(color: CustomColor.grey, width: 1.0),
         borderRadius: BorderRadius.circular(5),
       ),
     );
@@ -60,15 +61,22 @@ class HomeController extends GetxController {
   }
 
   void updateCurrentCard(PermCard card) {
+    printInfo(info: "Проверка что карта приходит не пустая ${card.id}");
     currentCard.value = card;
-    print("v update");
+    update();
+    fakeUpdate();
+  }
+
+  void fakeUpdate() async {
+    await _fakeCardRepository.getCard(id);
+    _cards.value = _cards.value;
   }
 
   Future<void> getCard() async {
     id += idCard.text;
     _cards.value = CardListResponse.loading();
     _cards.value = await _fakeCardRepository.getCard(id);
-    print("Я выполнил запрос и получил это: ${_cards.value}");
+    printInfo(info: "Я выполнил запрос и получил это: ${_cards.value}");
     _cards.value.when(
         success: (data) {
           updateCurrentCard(data[0]);

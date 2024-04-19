@@ -11,7 +11,7 @@ void main() {
       textSelectionTheme: TextSelectionThemeData(cursorColor: CustomColor.blueLight)
     ),
     debugShowCheckedModeBanner: false,
-    initialRoute: Routes.SPLASH,
+    initialRoute: Routes.HOME,
     getPages: AppPages.routes,
   ));
 }
