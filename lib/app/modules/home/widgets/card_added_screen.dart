@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+
 
 import 'package:flutter/material.dart';
 
@@ -20,14 +20,6 @@ class CardAddedScreen extends StatelessWidget {
     return Column(
       children: [
         const SizedBox(height: 10),
-        Image(
-          height: 200,
-          width: 400,
-          image: AssetImage(card.type.image),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
         Container(
           width: 250,
           height: 45,

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:perm_transport_card/constants.dart';
 import 'package:perm_transport_card/fake_data_class.dart';
 import 'package:perm_transport_card/models/card.dart';
+import 'package:perm_transport_card/models/response/fake_api_response.dart';
 import 'package:perm_transport_card/repositories/fake_card_repository.dart';
 
 class HomeController extends GetxController {
@@ -15,6 +16,8 @@ class HomeController extends GetxController {
   final Rx<PermCard> currentCard = unknown.obs;
   TextEditingController idCard = TextEditingController();
   String id = defaultId;
+  List<PermCard> deletedCard = FakeData.cards;
+  List<PermCard> currentCardsList = FakeData.cards;
   Rx<InputDecoration> textFieldDecoration =
       Rx<InputDecoration>(const InputDecoration());
   Rx<Color> buttonColor = Rx<Color>(CustomColor.grey);
@@ -23,27 +26,35 @@ class HomeController extends GetxController {
 
   CardListResponse get cards => _cards.value;
 
-  void setCurrentTab(int tabIndex) {
-    currentTab.value = tabIndex;
-  }
-
   @override
   void onInit() async {
     await getCard();
     super.onInit();
   }
 
+  void setCurrentTab(int tabIndex) {
+    currentTab.value = tabIndex;
+  }
+
   void updateTextFieldDecoration(InputDecoration newDecoration) {
     textFieldDecoration.value = newDecoration;
   }
 
-  void deleteCard() {
-    _cards.value = CardListResponse.success(FakeData.empty);
+  void deleteCard(String id) {
+    _cards.value.when(
+        success: (data) {
+          deletedCard = data.where((e) => e.id != id).toList();
+        },
+        loading: () {},
+        failed: (mes) {});
+    currentCardsList = deletedCard;
+    _cards.value = CardListResponse.success(deletedCard);
     setDefaultParametrs();
   }
 
   void setDefaultParametrs() {
-    id = defaultId;
+    indexPage.value = 0;
+    id = defaultId; //! Костыль всегда возвращаются данные
     idCard.text = '';
     textFieldDecoration.value = InputDecoration(
       counterText: "",
@@ -56,34 +67,54 @@ class HomeController extends GetxController {
         borderRadius: BorderRadius.circular(5),
       ),
     );
-
     buttonColor.value = CustomColor.grey;
   }
 
   void updateCurrentCard(PermCard card) {
-    printInfo(info: "Проверка что карта приходит не пустая ${card.id}");
     currentCard.value = card;
-    update();
-    fakeUpdate();
   }
 
   void fakeUpdate() async {
-    await _fakeCardRepository.getCard(id);
-    _cards.value = _cards.value;
+    var temp = _cards.value;
+    _cards.value = CardListResponse.loading();
+    await Future.delayed(const Duration(seconds: 1));
+    _cards.value = temp;
   }
 
   Future<void> getCard() async {
-    id += idCard.text;
     _cards.value = CardListResponse.loading();
-    _cards.value = await _fakeCardRepository.getCard(id);
-    printInfo(info: "Я выполнил запрос и получил это: ${_cards.value}");
+    _cards.value = await _fakeCardRepository.getCard();
     _cards.value.when(
         success: (data) {
+          currentCardsList = data;
           updateCurrentCard(data[0]);
         },
         loading: () => {},
         failed: (mes) => {});
     setDefaultParametrs();
+  }
+
+  Future<void> getCardById() async {
+    id += idCard.text;
+    _cards.value = CardListResponse.loading();
+    var temp = await _fakeCardRepository.getCardById(id);
+    temp.when(success: (data) {
+      bool containsData = currentCardsList.any((card) => card.id == data.id);
+
+      if (!containsData) {
+        currentCardsList.length > 1
+            ? currentCardsList.insert(1, data)
+            : currentCardsList.insert(0, data);
+      }
+      _cards.value = CardListResponse.success(currentCardsList);
+      printInfo(info: "Я выполнил запрос и получил это: ${_cards.value}");
+      setDefaultParametrs();
+    }, loading: () {
+      _cards.value = CardListResponse.loading();
+    }, failed: (mes) {
+      _cards.value = CardListResponse.failed(mes);
+      setDefaultParametrs();
+    });
   }
 
   @override

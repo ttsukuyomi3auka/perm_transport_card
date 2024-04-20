@@ -5,10 +5,10 @@ import 'package:perm_transport_card/constants.dart';
 import 'package:perm_transport_card/models/card.dart';
 
 class DeleteCard extends StatelessWidget {
-  final HomeController controller;
+  final HomeController controller = Get.find();
   final PermCard card;
 
-  const DeleteCard(this.controller, this.card, {super.key});
+  DeleteCard(this.card, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +88,7 @@ class DeleteCard extends StatelessWidget {
             height: 40,
             child: ElevatedButton(
               onPressed: () {
-                controller.deleteCard();
+                controller.deleteCard(card.id);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: CustomColor.blue,

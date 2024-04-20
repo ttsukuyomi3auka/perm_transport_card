@@ -9,8 +9,8 @@ import 'package:perm_transport_card/resources/resources.dart';
 
 class NoCardScreen extends StatelessWidget {
   final PermCard card;
-  final HomeController controller;
-  const NoCardScreen(this.card, this.controller, {super.key});
+  final HomeController controller = Get.find();
+  NoCardScreen(this.card, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +18,6 @@ class NoCardScreen extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const SizedBox(height: 10),
-        Image(
-          height: 200,
-          width: 400,
-          image: AssetImage(card.type.image),
-        ),
         const SizedBox(height: 20),
         Container(
           width: 250,
@@ -138,7 +132,7 @@ class NoCardScreen extends StatelessWidget {
                 child: InkWell(
                   onTap: () {
                     if (controller.buttonColor.value == CustomColor.green) {
-                      controller.getCard();
+                      controller.getCardById();
                       controller.setDefaultParametrs();
                     }
                   },

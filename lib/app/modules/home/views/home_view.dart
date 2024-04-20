@@ -4,6 +4,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:perm_transport_card/app/modules/home/controllers/home_controller.dart';
 import 'package:perm_transport_card/app/modules/home/widgets/app_bar.dart';
+import 'package:perm_transport_card/app/modules/home/widgets/card_added_screen.dart';
+import 'package:perm_transport_card/app/modules/home/widgets/custom_dot.dart';
+import 'package:perm_transport_card/app/modules/home/widgets/no_card_screen.dart';
 import 'package:perm_transport_card/constants.dart';
 import 'package:perm_transport_card/models/card.dart';
 import 'package:perm_transport_card/resources/resources.dart';
@@ -13,13 +16,8 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => Scaffold(
-
+    return Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          title: drawAppBarTitle(controller.currentCard.value),
-          actions: [drawAppBarAction(controller.currentCard.value)],
-        ),
         bottomNavigationBar: Obx(() => BottomNavigationBar(
               type: BottomNavigationBarType.fixed,
               currentIndex: controller.currentTab.value,
@@ -28,50 +26,14 @@ class HomeView extends GetView<HomeController> {
               selectedItemColor: CustomColor.blueIcon,
               onTap: controller.setCurrentTab,
               items: [
-                BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    LocalIcons.ticket,
-                    width: 20,
-                    height: 20,
-                    color: controller.currentTab.value == 0
-                        ? CustomColor.blueIcon
-                        : CustomColor.greyIcon,
-                  ),
-                  label: "Билеты",
-                ),
-                BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    LocalIcons.text,
-                    width: 20,
-                    height: 20,
-                    color: controller.currentTab.value == 1
-                        ? Colors.blue
-                        : Colors.grey,
-                  ),
-                  label: "Проездной",
-                ),
-                BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    LocalIcons.busWithRoadSign,
-                    width: 20,
-                    height: 20,
-                    color: controller.currentTab.value == 2
-                        ? Colors.blue
-                        : Colors.grey,
-                  ),
-                  label: "Расписание",
-                ),
-                BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    LocalIcons.user,
-                    width: 20,
-                    height: 20,
-                    color: controller.currentTab.value == 3
-                        ? Colors.blue
-                        : Colors.grey,
-                  ),
-                  label: "Кабинет",
-                )
+                drawBottomNavigationBarItem(LocalIcons.ticket, "Билеты",
+                    controller.currentTab.value, 0),
+                drawBottomNavigationBarItem(LocalIcons.text, "Проездной",
+                    controller.currentTab.value, 1),
+                drawBottomNavigationBarItem(LocalIcons.busWithRoadSign,
+                    "Расписание", controller.currentTab.value, 2),
+                drawBottomNavigationBarItem(
+                    LocalIcons.user, "Кабинет", controller.currentTab.value, 3),
               ],
             )),
         body: Container(
@@ -86,13 +48,14 @@ class HomeView extends GetView<HomeController> {
                 success: (List<PermCard> cards) {
                   return Column(
                     children: [
+                      drawAppBar(cards[controller.indexPage.value]),
                       CarouselSlider.builder(
                           itemCount: cards.length,
                           carouselController: controller.carouselController,
                           itemBuilder: (context, index, realIndex) {
                             return Image(
                               height: 200,
-                              width: 400,
+                              width: 380,
                               image: AssetImage(cards[index].type.image),
                             );
                           },
@@ -104,28 +67,14 @@ class HomeView extends GetView<HomeController> {
                               controller.updateCurrentCard(cards[index]);
                             },
                           )),
-                      //customdot
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: cards.asMap().entries.map((entry) {
-                          return Container(
-                              width: 15.0,
-                              height: 15.0,
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 8.0, horizontal: 4.0),
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: getColorForCard(
-                                      entry, controller.indexPage.value)),
-                              child: getIconForCard(entry.value));
-                        }).toList(),
-                      ),
-                      Container(
-                        color: Colors.white,
-                        child: IndexedStack(
-                          index: controller.indexPage.value,
-                          children: cards.map((e) => Text(e.id)).toList(),
-                        ),
+                      drawCustomDot(cards, controller.indexPage.value),
+                      IndexedStack(
+                        index: controller.indexPage.value,
+                        children: cards
+                            .map((e) => e.type == CardTypes.newCard
+                                ? NoCardScreen(e)
+                                : CardAddedScreen(e))
+                            .toList(),
                       )
                     ],
                   );
@@ -143,25 +92,25 @@ class HomeView extends GetView<HomeController> {
                       margin: const EdgeInsets.only(bottom: 80),
                       borderRadius: 5,
                       instantInit: false);
-                  controller.getCard();
+                  controller.getCardById();
+                  //! часть того самого костыля для того чтобы даже при ошибке вернуть все карты
                   return PageView();
                 },
               ),
-            ))));
+            )));
   }
 }
 
-Color getColorForCard(MapEntry<int, PermCard> entry, int currentIndex) {
-  bool isCurrent = entry.key == currentIndex;
-  return isCurrent ? Colors.red : Colors.grey;
+BottomNavigationBarItem drawBottomNavigationBarItem(
+    String icon, String label, int currentTab, int thisTab) {
+  return BottomNavigationBarItem(
+    icon: SvgPicture.asset(
+      icon,
+      width: 20,
+      height: 20,
+      color:
+          currentTab == thisTab ? CustomColor.blueIcon : CustomColor.greyIcon,
+    ),
+    label: label,
+  );
 }
-
-Widget getIconForCard(PermCard card) {
-  bool isNewCard = card.type == CardTypes.newCard;
-  return isNewCard
-      ? const Center(child: Icon(Icons.add, size: 14))
-      : const SizedBox();
-}
-
-//storage index image
-//index stack

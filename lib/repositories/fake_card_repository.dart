@@ -9,8 +9,18 @@ class FakeCardRepository {
 
   FakeCardRepository(this.api);
 
-  Future<CardListResponse> getCard(String id) async {
-    var data = await api.getData(id);
+  Future<FakeApiResponse<PermCard>> getCardById(String id) async {
+    var data = await api.getDataById(id);
+    return data.when(
+        success: (data) {
+          return FakeApiResponse<PermCard>.success(data);
+        },
+        loading: () => FakeApiResponse<PermCard>.loading(),
+        failed: (mes) => FakeApiResponse<PermCard>.failed(mes));
+  }
+
+  Future<CardListResponse> getCard() async {
+    var data = await api.getData();
     return data.when(
         success: (data) {
           return CardListResponse.success(data);

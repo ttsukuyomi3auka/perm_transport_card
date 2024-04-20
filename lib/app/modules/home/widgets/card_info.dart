@@ -20,7 +20,7 @@ class CardInfo extends StatelessWidget {
           children: [
             Text(
               card.name,
-              style: TextStyle(color: Colors.white, fontSize: 16),
+              style: const TextStyle(color: Colors.white, fontSize: 16),
             ),
             const SizedBox(
               height: 5,

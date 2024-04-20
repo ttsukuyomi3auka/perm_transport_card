@@ -5,7 +5,7 @@ import 'package:perm_transport_card/models/card.dart';
 
 String defaultId = "96431059033";
 
-PermCard unknown = PermCard("Добавить карту", "", CardTypes.newCard, "",
+PermCard unknown = PermCard("96431059033", "", CardTypes.newCard, "",
     DateTime.now(), "", DateTime.now(), "Транспортная карта");
 
 abstract class CustomColor {

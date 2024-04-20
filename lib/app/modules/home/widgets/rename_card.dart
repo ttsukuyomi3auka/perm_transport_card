@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:perm_transport_card/app/modules/home/controllers/home_controller.dart';
 import 'package:perm_transport_card/constants.dart';
 import 'package:perm_transport_card/models/card.dart';
 
-class RenameCard extends GetView<HomeController> {
+class RenameCard extends StatelessWidget {
   final PermCard card;
   final TextEditingController textEditingController;
   RenameCard(this.card, {super.key})
       : textEditingController = TextEditingController(text: card.name);
   @override
   Widget build(BuildContext context) {
+    printInfo(info: "КАКОГО хуя");
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       color: CustomColor.blackUpDown,
@@ -67,10 +67,12 @@ class RenameCard extends GetView<HomeController> {
                         BorderSide(color: CustomColor.greyIcon, width: 1.0),
                   ),
                 ),
-                style: const TextStyle(color: Colors.white),
-                onChanged: (value) {
-                  card.name = value;
+                onEditingComplete: () {
+                  final currentValue = textEditingController.text;
+                  FocusScope.of(context).unfocus();
+                  textEditingController.text = currentValue;
                 },
+                style: const TextStyle(color: Colors.white),
               )),
           const SizedBox(
             height: 70,
@@ -103,8 +105,8 @@ class RenameCard extends GetView<HomeController> {
             height: 40,
             child: ElevatedButton(
               onPressed: () {
+                card.name = textEditingController.text;
                 card.copyWith(name: textEditingController.text);
-                controller.updateCurrentCard(card);
                 printInfo(info: card.name);
                 //TODO это не работает и все с этим
               },
