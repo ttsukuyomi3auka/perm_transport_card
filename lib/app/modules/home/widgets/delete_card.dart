@@ -89,6 +89,7 @@ class DeleteCard extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () {
                 controller.deleteCard(card.id);
+                Get.back();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: CustomColor.blue,

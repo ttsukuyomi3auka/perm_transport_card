@@ -51,7 +51,6 @@ class HomeView extends GetView<HomeController> {
                       drawAppBar(cards[controller.indexPage.value]),
                       CarouselSlider.builder(
                           itemCount: cards.length,
-                          carouselController: controller.carouselController,
                           itemBuilder: (context, index, realIndex) {
                             return Image(
                               height: 200,
@@ -93,7 +92,6 @@ class HomeView extends GetView<HomeController> {
                       borderRadius: 5,
                       instantInit: false);
                   controller.getCardById();
-                  //! часть того самого костыля для того чтобы даже при ошибке вернуть все карты
                   return PageView();
                 },
               ),

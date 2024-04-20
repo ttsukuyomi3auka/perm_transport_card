@@ -10,7 +10,6 @@ class RenameCard extends StatelessWidget {
       : textEditingController = TextEditingController(text: card.name);
   @override
   Widget build(BuildContext context) {
-    printInfo(info: "КАКОГО хуя");
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       color: CustomColor.blackUpDown,
@@ -108,7 +107,7 @@ class RenameCard extends StatelessWidget {
                 card.name = textEditingController.text;
                 card.copyWith(name: textEditingController.text);
                 printInfo(info: card.name);
-                //TODO это не работает и все с этим
+                Get.back();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: CustomColor.blue,

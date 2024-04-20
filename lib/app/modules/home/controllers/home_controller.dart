@@ -1,22 +1,18 @@
-import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:perm_transport_card/constants.dart';
 import 'package:perm_transport_card/fake_data_class.dart';
 import 'package:perm_transport_card/models/card.dart';
-import 'package:perm_transport_card/models/response/fake_api_response.dart';
 import 'package:perm_transport_card/repositories/fake_card_repository.dart';
 
 class HomeController extends GetxController {
   final FakeCardRepository _fakeCardRepository;
   final indexPage = 0.obs;
-  final carouselController = CarouselController();
   final _cards = CardListResponse.loading().obs;
   RxInt currentTab = 1.obs;
   final Rx<PermCard> currentCard = unknown.obs;
   TextEditingController idCard = TextEditingController();
   String id = defaultId;
-  List<PermCard> deletedCard = FakeData.cards;
   List<PermCard> currentCardsList = FakeData.cards;
   Rx<InputDecoration> textFieldDecoration =
       Rx<InputDecoration>(const InputDecoration());
@@ -43,13 +39,11 @@ class HomeController extends GetxController {
   void deleteCard(String id) {
     _cards.value.when(
         success: (data) {
-          deletedCard = data.where((e) => e.id != id).toList();
+          currentCardsList = data.where((e) => e.id != id).toList();
         },
         loading: () {},
         failed: (mes) {});
-    currentCardsList = deletedCard;
-    _cards.value = CardListResponse.success(deletedCard);
-    setDefaultParametrs();
+    _cards.value = CardListResponse.success(currentCardsList);
   }
 
   void setDefaultParametrs() {
@@ -87,7 +81,6 @@ class HomeController extends GetxController {
     _cards.value.when(
         success: (data) {
           currentCardsList = data;
-          updateCurrentCard(data[0]);
         },
         loading: () => {},
         failed: (mes) => {});
