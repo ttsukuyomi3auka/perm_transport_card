@@ -1,10 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:perm_transport_card/app/modules/home/controllers/home_controller.dart';
 import 'package:perm_transport_card/app/modules/home/widgets/app_bar.dart';
 import 'package:perm_transport_card/app/modules/home/widgets/card_added_screen.dart';
+import 'package:perm_transport_card/app/modules/home/widgets/custom_bottom_navigation_bar.dart';
 import 'package:perm_transport_card/app/modules/home/widgets/custom_dot.dart';
 import 'package:perm_transport_card/app/modules/home/widgets/no_card_screen.dart';
 import 'package:perm_transport_card/constants.dart';
@@ -18,24 +18,7 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        bottomNavigationBar: Obx(() => BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              currentIndex: controller.currentTab.value,
-              backgroundColor: CustomColor.blackUpDown,
-              unselectedItemColor: CustomColor.grey,
-              selectedItemColor: CustomColor.blueIcon,
-              onTap: controller.setCurrentTab,
-              items: [
-                drawBottomNavigationBarItem(LocalIcons.ticket, "Билеты",
-                    controller.currentTab.value, 0),
-                drawBottomNavigationBarItem(LocalIcons.text, "Проездной",
-                    controller.currentTab.value, 1),
-                drawBottomNavigationBarItem(LocalIcons.busWithRoadSign,
-                    "Расписание", controller.currentTab.value, 2),
-                drawBottomNavigationBarItem(
-                    LocalIcons.user, "Кабинет", controller.currentTab.value, 3),
-              ],
-            )),
+        bottomNavigationBar: CustomBottomNavigationBar(),
         body: Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -97,18 +80,4 @@ class HomeView extends GetView<HomeController> {
               ),
             )));
   }
-}
-
-BottomNavigationBarItem drawBottomNavigationBarItem(
-    String icon, String label, int currentTab, int thisTab) {
-  return BottomNavigationBarItem(
-    icon: SvgPicture.asset(
-      icon,
-      width: 20,
-      height: 20,
-      color:
-          currentTab == thisTab ? CustomColor.blueIcon : CustomColor.greyIcon,
-    ),
-    label: label,
-  );
 }

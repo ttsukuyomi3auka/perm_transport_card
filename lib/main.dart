@@ -8,8 +8,9 @@ void main() {
   initServices();
   runApp(GetMaterialApp(
     theme: ThemeData(
-      textSelectionTheme: TextSelectionThemeData(cursorColor: CustomColor.blueLight)
-    ),
+        brightness: Brightness.dark,
+        textSelectionTheme:
+            TextSelectionThemeData(cursorColor: CustomColor.blueLight)),
     debugShowCheckedModeBanner: false,
     initialRoute: Routes.HOME,
     getPages: AppPages.routes,

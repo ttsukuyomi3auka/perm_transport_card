@@ -129,44 +129,6 @@ class CustomAppBarAddedCard extends StatelessWidget {
   }
 }
 
-Widget drawAppBarTitle(PermCard card) {
-  return Container(
-    height: 80,
-    color: CustomColor.blackUpDown,
-    padding: const EdgeInsets.fromLTRB(15, 30, 0, 0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              card.type == CardTypes.newCard ? "Добавить карту" : card.id,
-              style: const TextStyle(fontSize: 16, color: Colors.white),
-            ),
-            const SizedBox(width: 4),
-            if (card.type != CardTypes.newCard)
-              InkWell(
-                onTap: () {},
-                child: Icon(
-                  Icons.copy,
-                  size: 16,
-                  color: CustomColor.blueIcon,
-                ),
-              ),
-          ],
-        ),
-        const SizedBox(height: 4),
-        if (card.type != CardTypes.newCard)
-          Text(
-            card.name,
-            style: const TextStyle(fontSize: 14, color: Colors.white),
-            textAlign: TextAlign.left,
-          ),
-      ],
-    ),
-  );
-}
-
 Widget drawAppBar(PermCard card) {
   bool isNew = card.type == CardTypes.newCard;
   return isNew ? CustomAppBarNewCard(card) : CustomAppBarAddedCard(card);

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:perm_transport_card/app/modules/home/views/account.dart';
+import 'package:perm_transport_card/app/modules/home/views/home_view.dart';
+import 'package:perm_transport_card/app/modules/home/views/ticket.dart';
+import 'package:perm_transport_card/app/modules/home/views/trail.dart';
 import 'package:perm_transport_card/constants.dart';
 import 'package:perm_transport_card/fake_data_class.dart';
 import 'package:perm_transport_card/models/card.dart';
@@ -30,6 +34,21 @@ class HomeController extends GetxController {
 
   void setCurrentTab(int tabIndex) {
     currentTab.value = tabIndex;
+    switch (tabIndex) {
+      case 0:
+        Get.to(() => const TicketView());
+        break;
+      case 1:
+        Get.to(() => const HomeView());
+        setDefaultParametrs();
+        break;
+      case 2:
+        Get.to(() => const TrailView());
+        break;
+      case 3:
+        Get.to(() => const AccountView());
+      default:
+    }
   }
 
   void updateTextFieldDecoration(InputDecoration newDecoration) {
