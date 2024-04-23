@@ -39,7 +39,7 @@ class HomeController extends GetxController {
         Get.to(() => const TicketView());
         break;
       case 1:
-        Get.to(() => const HomeView());
+        Get.to(() => HomeView());
         setDefaultParametrs();
         break;
       case 2:

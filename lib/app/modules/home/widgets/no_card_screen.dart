@@ -134,6 +134,25 @@ class NoCardScreen extends StatelessWidget {
                     if (controller.buttonColor.value == CustomColor.green) {
                       controller.getCardById();
                       controller.setDefaultParametrs();
+                      controller.cards.when(
+                          success: (data) {},
+                          loading: () {},
+                          failed: (message) {
+                            return ScaffoldMessenger.of(context)
+                                .showSnackBar(SnackBar(
+                              behavior: SnackBarBehavior.floating,
+                              backgroundColor: CustomColor.grey,
+                              elevation: 15,
+                              shape: Border(
+                                  left: BorderSide(
+                                      color: CustomColor.green, width: 4)),
+                              content: const Text(
+                                "Номер карты скопирован",
+                                style: TextStyle(color: Colors.white),
+                                textAlign: TextAlign.start,
+                              ),
+                            ));
+                          });
                     }
                   },
                   child: Row(

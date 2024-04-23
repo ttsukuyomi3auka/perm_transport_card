@@ -7,153 +7,162 @@ import 'package:perm_transport_card/app/modules/home/widgets/rename_card.dart';
 import 'package:perm_transport_card/constants.dart';
 import 'package:perm_transport_card/models/card.dart';
 
-class CustomAppBarAddedCard extends StatelessWidget {
-  final PermCard card;
-  final HomeController controller = Get.find();
 
-  CustomAppBarAddedCard(this.card, {super.key});
+
+PopupMenuButton drawPopupMenu(PermCard card) {
+  HomeController controller = Get.find();
+  return PopupMenuButton(
+    color: CustomColor.black,
+    itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+      PopupMenuItem(
+        child: ListTile(
+          title: const Text(
+            "Информация о карте",
+            style: TextStyle(color: Colors.white, fontSize: 12),
+          ),
+          onTap: () {
+            Get.to(const CardInfo(), arguments: card);
+          },
+        ),
+      ),
+      PopupMenuItem(
+        child: ListTile(
+          title: const Text(
+            "Обновить",
+            style: TextStyle(color: Colors.white, fontSize: 12),
+          ),
+          onTap: () {
+            controller.fakeUpdate();
+            Get.back();
+          },
+        ),
+      ),
+      PopupMenuItem(
+        child: ListTile(
+          title: const Text(
+            "Переименовать карту",
+            style: TextStyle(color: Colors.white, fontSize: 12),
+          ),
+          onTap: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (context) {
+                return Padding(
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: RenameCard(card),
+                );
+              },
+            );
+          },
+        ),
+      ),
+      PopupMenuItem(
+        child: ListTile(
+          title: const Text(
+            "Удалить карту",
+            style: TextStyle(color: Colors.white, fontSize: 12),
+          ),
+          onTap: () {
+            showModalBottomSheet(
+              isScrollControlled: true,
+              context: context,
+              builder: (BuildContext context) {
+                return DeleteCard(card);
+              },
+            );
+          },
+        ),
+      )
+    ],
+  );
+}
+
+class CustomAppBarAddedCard extends StatelessWidget {
+  final HomeController controller = Get.find();
+  CustomAppBarAddedCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 80,
-      width: context.width,
-      color: CustomColor.blackUpDown,
-      padding: const EdgeInsets.fromLTRB(15, 30, 0, 0),
-      child: Expanded(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          InkWell(
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: CustomColor.grey,
+                  elevation: 15,
+                  shape: Border(
+                      left: BorderSide(color: CustomColor.green, width: 4)),
+                  content: const Text(
+                    "Номер карты скопирован",
+                    style: TextStyle(color: Colors.white),
+                    textAlign: TextAlign.start,
+                  ),
+                ),
+              );
+            },
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Text(
-                      card.id,
-                      style: const TextStyle(fontSize: 16, color: Colors.white),
-                    ),
-                    const SizedBox(width: 4),
-                    InkWell(
-                      onTap: () {},
-                      child: Icon(
-                        Icons.copy,
-                        size: 16,
-                        color: CustomColor.blueIcon,
-                      ),
-                    ),
-                  ],
+                Text(
+                  controller.currentCardsList[controller.indexPage.value].id,
+                  style: const TextStyle(fontSize: 16, color: Colors.white),
                 ),
-                const SizedBox(height: 4),
-                if (card.type != CardTypes.newCard)
-                  Text(
-                    card.name,
-                    style: const TextStyle(fontSize: 14, color: Colors.white),
-                    textAlign: TextAlign.left,
-                  ),
-              ],
-            ),
-            PopupMenuButton(
-              color: CustomColor.black,
-              icon:
-                  Icon(Icons.more_vert, size: 40, color: CustomColor.greyIcon),
-              itemBuilder: (BuildContext context) => <PopupMenuEntry>[
-                PopupMenuItem(
-                  child: ListTile(
-                    title: const Text(
-                      "Информация о карте",
-                      style: TextStyle(color: Colors.white, fontSize: 12),
-                    ),
-                    onTap: () {
-                      Get.to(const CardInfo(), arguments: card);
-                    },
-                  ),
+                const SizedBox(
+                  width: 2,
                 ),
-                PopupMenuItem(
-                  child: ListTile(
-                    title: const Text(
-                      "Обновить",
-                      style: TextStyle(color: Colors.white, fontSize: 12),
-                    ),
-                    onTap: () {
-                      controller.fakeUpdate();
-                      Get.back();
-                    },
-                  ),
-                ),
-                PopupMenuItem(
-                  child: ListTile(
-                    title: const Text(
-                      "Переименовать карту",
-                      style: TextStyle(color: Colors.white, fontSize: 12),
-                    ),
-                    onTap: () {
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (context) {
-                          return Padding(
-                            padding: EdgeInsets.only(
-                                bottom:
-                                    MediaQuery.of(context).viewInsets.bottom),
-                            child: RenameCard(card),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ),
-                PopupMenuItem(
-                  child: ListTile(
-                    title: const Text(
-                      "Удалить карту",
-                      style: TextStyle(color: Colors.white, fontSize: 12),
-                    ),
-                    onTap: () {
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        context: context,
-                        builder: (BuildContext context) {
-                          return DeleteCard(card);
-                        },
-                      );
-                    },
-                  ),
+                Icon(
+                  Icons.copy,
+                  size: 16,
+                  color: CustomColor.blueIcon,
                 )
               ],
             ),
-          ],
-        ),
-      ),
+          ),
+          Text(
+            controller.currentCardsList[controller.indexPage.value].name,
+            style: const TextStyle(fontSize: 12, color: Colors.white),
+          ),
+        ]),
+        IconButton(
+          onPressed: () {
+            PopupMenuButton popupMenu = drawPopupMenu(
+                controller.currentCardsList[controller.indexPage.value]);
+
+            showMenu(
+              surfaceTintColor: CustomColor.black,
+              context: context,
+              position: const RelativeRect.fromLTRB(100, 70, 0, 0),
+              items: popupMenu.itemBuilder(context),
+            );
+          },
+          icon: Icon(Icons.more_vert, size: 40, color: CustomColor.greyIcon),
+        )
+      ],
     );
   }
 }
 
-Widget drawAppBar(PermCard card) {
-  bool isNew = card.type == CardTypes.newCard;
-  return isNew ? CustomAppBarNewCard(card) : CustomAppBarAddedCard(card);
-}
-
 class CustomAppBarNewCard extends StatelessWidget {
-  final PermCard card;
-  const CustomAppBarNewCard(this.card, {super.key});
+  const CustomAppBarNewCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        height: 80,
-        width: double.infinity,
-        color: CustomColor.blackUpDown,
-        padding: const EdgeInsets.fromLTRB(15, 30, 0, 0),
-        child: const Center(
-          child: Row(
-            children: [
-              Text(
-                "Добавить карту",
-                style: TextStyle(fontSize: 16, color: Colors.white),
-              ),
-            ],
+    return const Center(
+      child: Row(
+        children: [
+          Text(
+            "Добавить карту",
+            style: TextStyle(fontSize: 16, color: Colors.white),
           ),
-        ));
+        ],
+      ),
+    );
   }
 }

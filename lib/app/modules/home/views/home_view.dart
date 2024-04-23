@@ -19,6 +19,14 @@ class HomeView extends GetView<HomeController> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         bottomNavigationBar: CustomBottomNavigationBar(),
+        appBar: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: CustomColor.blackUpDown,
+            title: Obx(() =>
+                controller.currentCardsList[controller.indexPage.value].type ==
+                        CardTypes.newCard
+                    ? const CustomAppBarNewCard()
+                    : CustomAppBarAddedCard())),
         body: Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -28,56 +36,54 @@ class HomeView extends GetView<HomeController> {
             ),
             child: Obx(
               () => controller.cards.when(
-                success: (List<PermCard> cards) {
-                  return Column(
-                    children: [
-                      drawAppBar(cards[controller.indexPage.value]),
-                      CarouselSlider.builder(
-                          itemCount: cards.length,
-                          itemBuilder: (context, index, realIndex) {
-                            return Image(
-                              height: 200,
-                              width: 380,
-                              image: AssetImage(cards[index].type.image),
-                            );
-                          },
-                          options: CarouselOptions(
-                            viewportFraction: 0.9,
-                            enableInfiniteScroll: false,
-                            onPageChanged: (index, reason) {
-                              controller.indexPage.value = index;
-                              controller.updateCurrentCard(cards[index]);
+                  success: (List<PermCard> cards) {
+                    return Column(
+                      children: [
+                        //drawAppBar(cards[controller.indexPage.value]),
+                        CarouselSlider.builder(
+                            itemCount: cards.length,
+                            itemBuilder: (context, index, realIndex) {
+                              return Image(
+                                height: 200,
+                                width: 380,
+                                image: AssetImage(cards[index].type.image),
+                              );
                             },
-                          )),
-                      drawCustomDot(cards, controller.indexPage.value),
-                      IndexedStack(
-                        index: controller.indexPage.value,
-                        children: cards
-                            .map((e) => e.type == CardTypes.newCard
-                                ? NoCardScreen(e)
-                                : CardAddedScreen(e))
-                            .toList(),
-                      )
-                    ],
-                  );
-                },
-                loading: () => const Center(
-                  child: CircularProgressIndicator(
-                    color: Colors.red,
-                  ),
-                ),
-                failed: (message) {
-                  Get.snackbar("", message,
-                      backgroundColor: CustomColor.grey,
-                      snackPosition: SnackPosition.BOTTOM,
-                      colorText: Colors.white,
-                      margin: const EdgeInsets.only(bottom: 80),
-                      borderRadius: 5,
-                      instantInit: false);
-                  controller.getCardById();
-                  return PageView();
-                },
-              ),
+                            options: CarouselOptions(
+                              viewportFraction: 0.9,
+                              enableInfiniteScroll: false,
+                              onPageChanged: (index, reason) {
+                                controller.indexPage.value = index;
+                              },
+                            )),
+                        drawCustomDot(cards, controller.indexPage.value),
+                        IndexedStack(
+                          index: controller.indexPage.value,
+                          children: cards
+                              .map((e) => e.type == CardTypes.newCard
+                                  ? NoCardScreen(e)
+                                  : CardAddedScreen(e))
+                              .toList(),
+                        )
+                      ],
+                    );
+                  },
+                  loading: () => const Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.red,
+                        ),
+                      ),
+                  failed: (message) {
+                    Get.snackbar("", message,
+                        backgroundColor: CustomColor.grey,
+                        snackPosition: SnackPosition.BOTTOM,
+                        colorText: Colors.white,
+                        margin: const EdgeInsets.only(bottom: 80),
+                        borderRadius: 5,
+                        instantInit: false);
+                    controller.getCardById();
+                    return PageView();
+                  }),
             )));
   }
 }

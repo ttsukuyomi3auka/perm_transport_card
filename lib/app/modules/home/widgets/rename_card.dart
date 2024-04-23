@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:perm_transport_card/app/modules/home/controllers/home_controller.dart';
+import 'package:perm_transport_card/app/modules/home/widgets/app_bar.dart';
+import 'package:perm_transport_card/app/modules/home/widgets/custom_dot.dart';
 import 'package:perm_transport_card/constants.dart';
 import 'package:perm_transport_card/models/card.dart';
 
 class RenameCard extends StatelessWidget {
   final PermCard card;
+  final HomeController controller = Get.find();
   final TextEditingController textEditingController;
   RenameCard(this.card, {super.key})
       : textEditingController = TextEditingController(text: card.name);
@@ -106,6 +110,9 @@ class RenameCard extends StatelessWidget {
               onPressed: () {
                 card.name = textEditingController.text;
                 card.copyWith(name: textEditingController.text);
+
+                controller.currentCardsList[controller.indexPage.value].name = textEditingController.text;
+                controller.update();
                 printInfo(info: card.name);
                 Get.back();
               },
